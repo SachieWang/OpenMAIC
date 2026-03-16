@@ -47,6 +47,7 @@ export interface SettingsState {
     {
       apiKey: string;
       baseUrl: string;
+      modelId: string;
       enabled: boolean;
       isServerConfigured?: boolean;
       serverBaseUrl?: string;
@@ -175,7 +176,7 @@ export interface SettingsState {
   setASRLanguage: (language: string) => void;
   setTTSProviderConfig: (
     providerId: TTSProviderId,
-    config: Partial<{ apiKey: string; baseUrl: string; enabled: boolean }>,
+    config: Partial<{ apiKey: string; baseUrl: string; modelId: string; enabled: boolean }>,
   ) => void;
   setASRProviderConfig: (
     providerId: ASRProviderId,
@@ -260,12 +261,12 @@ const getDefaultAudioConfig = () => ({
   asrProviderId: 'browser-native' as ASRProviderId,
   asrLanguage: 'zh',
   ttsProvidersConfig: {
-    'openai-tts': { apiKey: '', baseUrl: '', enabled: true },
-    'azure-tts': { apiKey: '', baseUrl: '', enabled: false },
-    'glm-tts': { apiKey: '', baseUrl: '', enabled: false },
-    'qwen-tts': { apiKey: '', baseUrl: '', enabled: false },
-    'browser-native-tts': { apiKey: '', baseUrl: '', enabled: true },
-  } as Record<TTSProviderId, { apiKey: string; baseUrl: string; enabled: boolean }>,
+    'openai-tts': { apiKey: '', baseUrl: '', modelId: 'gpt-4o-mini-tts', enabled: true },
+    'azure-tts': { apiKey: '', baseUrl: '', modelId: '', enabled: false },
+    'glm-tts': { apiKey: '', baseUrl: '', modelId: 'glm-tts', enabled: false },
+    'qwen-tts': { apiKey: '', baseUrl: '', modelId: 'qwen3-tts-flash', enabled: false },
+    'browser-native-tts': { apiKey: '', baseUrl: '', modelId: '', enabled: true },
+  } as Record<TTSProviderId, { apiKey: string; baseUrl: string; modelId: string; enabled: boolean }>,
   asrProvidersConfig: {
     'openai-whisper': { apiKey: '', baseUrl: '', enabled: true },
     'browser-native': { apiKey: '', baseUrl: '', enabled: true },

@@ -100,6 +100,8 @@ export function TTSSettings({ selectedProviderId }: TTSSettingsProps) {
       if (apiKeyValue?.trim()) requestBody.ttsApiKey = apiKeyValue;
       const baseUrlValue = ttsProvidersConfig[selectedProviderId]?.baseUrl;
       if (baseUrlValue?.trim()) requestBody.ttsBaseUrl = baseUrlValue;
+      const modelIdValue = ttsProvidersConfig[selectedProviderId]?.modelId;
+      if (modelIdValue?.trim()) requestBody.ttsModelId = modelIdValue;
 
       const response = await fetch('/api/generate/tts', {
         method: 'POST',
@@ -150,7 +152,7 @@ export function TTSSettings({ selectedProviderId }: TTSSettingsProps) {
       {/* API Key & Base URL */}
       {(ttsProvider.requiresApiKey || isServerConfigured) && (
         <>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label className="text-sm">{t('settings.ttsApiKey')}</Label>
               <div className="relative">
@@ -176,7 +178,22 @@ export function TTSSettings({ selectedProviderId }: TTSSettingsProps) {
                 </button>
               </div>
             </div>
+
             <div className="space-y-2">
+              <Label className="text-sm">{t('settings.ttsModelId')}</Label>
+              <Input
+                placeholder={t('settings.enterModelId')}
+                value={ttsProvidersConfig[selectedProviderId]?.modelId || ''}
+                onChange={(e) =>
+                  setTTSProviderConfig(selectedProviderId, {
+                    modelId: e.target.value,
+                  })
+                }
+                className="text-sm"
+              />
+            </div>
+
+            <div className="space-y-2 col-span-2 md:col-span-1">
               <Label className="text-sm">{t('settings.ttsBaseUrl')}</Label>
               <Input
                 placeholder={ttsProvider.defaultBaseUrl || t('settings.enterCustomBaseUrl')}

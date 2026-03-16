@@ -149,7 +149,9 @@ async function generateOpenAITTS(
 ): Promise<TTSGenerationResult> {
   const baseUrl = config.baseUrl || TTS_PROVIDERS['openai-tts'].defaultBaseUrl;
 
-  // Use gpt-4o-mini-tts for best quality and intelligent realtime applications
+  // Use modelId from config if provided, fallback to gpt-4o-mini-tts
+  const model = config.modelId || 'gpt-4o-mini-tts';
+
   const response = await fetch(`${baseUrl}/audio/speech`, {
     method: 'POST',
     headers: {
@@ -157,7 +159,7 @@ async function generateOpenAITTS(
       'Content-Type': 'application/json; charset=utf-8',
     },
     body: JSON.stringify({
-      model: 'gpt-4o-mini-tts',
+      model,
       input: text,
       voice: config.voice,
       speed: config.speed || 1.0,
@@ -222,6 +224,9 @@ async function generateAzureTTS(
 async function generateGLMTTS(config: TTSModelConfig, text: string): Promise<TTSGenerationResult> {
   const baseUrl = config.baseUrl || TTS_PROVIDERS['glm-tts'].defaultBaseUrl;
 
+  // Use modelId from config if provided, fallback to glm-tts
+  const model = config.modelId || 'glm-tts';
+
   const response = await fetch(`${baseUrl}/audio/speech`, {
     method: 'POST',
     headers: {
@@ -229,7 +234,7 @@ async function generateGLMTTS(config: TTSModelConfig, text: string): Promise<TTS
       'Content-Type': 'application/json; charset=utf-8',
     },
     body: JSON.stringify({
-      model: 'glm-tts',
+      model,
       input: text,
       voice: config.voice,
       speed: config.speed || 1.0,
@@ -265,6 +270,9 @@ async function generateGLMTTS(config: TTSModelConfig, text: string): Promise<TTS
 async function generateQwenTTS(config: TTSModelConfig, text: string): Promise<TTSGenerationResult> {
   const baseUrl = config.baseUrl || TTS_PROVIDERS['qwen-tts'].defaultBaseUrl;
 
+  // Use modelId from config if provided, fallback to qwen3-tts-flash
+  const model = config.modelId || 'qwen3-tts-flash';
+
   // Calculate speed: Qwen3 uses rate parameter from -500 to 500
   // speed 1.0 = rate 0, speed 2.0 = rate 500, speed 0.5 = rate -250
   const rate = Math.round(((config.speed || 1.0) - 1.0) * 500);
@@ -276,7 +284,7 @@ async function generateQwenTTS(config: TTSModelConfig, text: string): Promise<TT
       'Content-Type': 'application/json; charset=utf-8',
     },
     body: JSON.stringify({
-      model: 'qwen3-tts-flash',
+      model,
       input: {
         text,
         voice: config.voice,
@@ -335,6 +343,7 @@ export async function getCurrentTTSConfig(): Promise<TTSModelConfig> {
     providerId: ttsProviderId,
     apiKey: providerConfig?.apiKey,
     baseUrl: providerConfig?.baseUrl,
+    modelId: providerConfig?.modelId,
     voice: ttsVoice,
     speed: ttsSpeed,
   };
